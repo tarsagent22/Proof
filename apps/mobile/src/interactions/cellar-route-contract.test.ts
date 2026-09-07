@@ -77,6 +77,10 @@ test("My Shelf has explicit component-state grid and dense list views with bottl
   assert.match(cellar, /bottles\.slice\(0, visibleCount\)/);
   assert.match(cellar, /Show \{Math\.min\(12, bottles\.length - visibleBottles\.length\)\} more/);
   assert.match(cellar, /<MyShelfDisplay/);
+  const shelfDisplay = read("src/components/MyShelfDisplay.tsx");
+  assert.match(shelfDisplay, /shadowEntries/);
+  assert.match(shelfDisplay, /level="shadow"/);
+  assert.match(shelfDisplay, /styles\.shadowRow/);
   const footer = cellar.indexOf("ListFooterComponent");
   const huntNext = cellar.indexOf("Hunt next", footer);
   const dna = cellar.indexOf("Your Bourbon DNA", footer);

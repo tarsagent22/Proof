@@ -370,8 +370,10 @@ const memberTabsSource = readFileSync("apps/mobile/src/navigation/member-tabs.ts
 const tabsLayoutSource = readFileSync("apps/mobile/app/(app)/(tabs)/_layout.tsx", "utf8");
 assert.match(tabsLayoutSource, /fontFamily: "Fraunces_700Bold"/, "the fixed Signal Feed brand header must use Fraunces");
 assert.match(tabsLayoutSource, /accessibilityLabel="Open alert inbox"/, "the Signal Feed bell must open a real alert inbox action");
-assert.match(memberTabsSource, /icon: "plus-circle-outline"/, "Post should use a restrained outlined icon");
-assert.doesNotMatch(tabsLayoutSource, /size \+ 5/, "Post should not visually overpower the primary feed");
+assert.match(memberTabsSource, /icon: "plus"/, "Post should expose a plain plus glyph for the primary creation action");
+assert.match(tabsLayoutSource, /function PostTabIcon/, "Post should use a dedicated tab-bar treatment");
+assert.match(tabsLayoutSource, /width: 48, height: 48[\s\S]*backgroundColor: colors\.accent/, "Post should use a large filled amber control");
+assert.match(tabsLayoutSource, /tabBarAccessibilityLabel: "Create a Community Signal"/, "the custom Post control must retain an explicit accessible action label");
 for (const route of ["index", "radar", "post", "cellar"]) {
   assert.doesNotMatch(readFileSync(`apps/mobile/app/(app)/(tabs)/${route}.tsx`, "utf8"), /await signOut\(/, `native ${route} data errors must not destroy the member session`);
 }

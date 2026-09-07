@@ -1,7 +1,7 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs, router } from "expo-router";
 import type { ColorValue } from "react-native";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../../../src/theme";
 import { MEMBER_TABS } from "../../../src/navigation/member-tabs";
 
@@ -15,7 +15,11 @@ function icon(route: "index" | "radar" | "post" | "cellar" | "hq") {
 }
 
 function BrandTitle() {
-  return <Text numberOfLines={1} style={styles.brandTitle}>Bourbon Signal</Text>;
+  return <Text accessibilityLabel="Bourbon Signal." numberOfLines={1} style={styles.brandTitle}>Bourbon Signal<Text style={styles.brandPeriod}>.</Text></Text>;
+}
+
+function PostTabIcon() {
+  return <View style={styles.postIconButton}><MaterialCommunityIcons color={colors.background} name="plus" size={28} /></View>;
 }
 
 function AlertInboxButton() {
@@ -53,7 +57,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="index" options={{ title: "Home", headerTitle: BrandTitle, headerTitleAlign: "left", headerRight: AlertInboxButton, headerTransparent: true, headerStyle: { backgroundColor: "transparent" }, tabBarIcon: icon("index") }} />
       <Tabs.Screen name="radar" options={{ title: "Radar", tabBarIcon: icon("radar") }} />
-      <Tabs.Screen name="post" options={{ title: "Post", tabBarIcon: icon("post") }} />
+      <Tabs.Screen name="post" options={{ title: "Post", tabBarAccessibilityLabel: "Create a Community Signal", tabBarIcon: PostTabIcon }} />
       <Tabs.Screen name="cellar" options={{ title: "My Shelf", tabBarIcon: icon("cellar") }} />
       <Tabs.Screen name="hq" options={{ title: "Account", tabBarIcon: icon("hq") }} />
     </Tabs>
@@ -62,6 +66,8 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   brandTitle: { color: colors.text, fontFamily: "Fraunces_700Bold", fontSize: 24, lineHeight: 30, letterSpacing: -0.35 },
+  brandPeriod: { color: colors.accent },
   alertButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center", marginRight: 4 },
+  postIconButton: { width: 48, height: 48, marginTop: -12, borderRadius: 24, alignItems: "center", justifyContent: "center", backgroundColor: colors.accent, borderColor: "#F1BC72", borderWidth: 1 },
   pressed: { opacity: 0.68 },
 });

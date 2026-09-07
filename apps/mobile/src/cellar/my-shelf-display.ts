@@ -21,18 +21,39 @@ export const SHELF_BOTTLE_VARIANTS: readonly ShelfBottleVariant[] = [
   { name: "short-wide", bodyWidth: 33, bodyHeight: 31, neckWidth: 11, neckHeight: 10, shoulderRadius: 8, capWidth: 16, labelWidth: 22, glassColor: "#684B2C", amberColor: "#C97920" },
 ] as const;
 
-const SHELF_MILESTONES = [1, 3, 6, 10, 15, 19, 22, 29, 37, 46, 56, 67] as const;
+export type ShelfBottleLayer = "lower" | "upper" | "shadow";
+
+const EARLY_REVEAL_GAPS = [0, 1, 2, 1, 2, 1, 2, 3, 4, 4, 2, 2, 2, 3, 4] as const;
+
+function revealGap(revealIndex: number) {
+  if (revealIndex < EARLY_REVEAL_GAPS.length) return EARLY_REVEAL_GAPS[revealIndex]!;
+  const hash = Math.imul(revealIndex + 11, 2_654_435_761) >>> 0;
+  return 4 + Math.floor((revealIndex - 14) / 2) + (hash % 5);
+}
+
+function stableShelfHash(value: string) {
+  let hash = 2_166_136_261;
+  for (let index = 0; index < value.length; index += 1) hash = Math.imul(hash ^ value.charCodeAt(index), 16_777_619);
+  return hash >>> 0;
+}
 
 export function shelfBottleCount(ownedCount: number) {
   const safeCount = Math.max(0, Math.floor(ownedCount));
-  return SHELF_MILESTONES.filter((milestone) => safeCount >= milestone).length;
+  let threshold = 1;
+  let revealed = 0;
+  while (threshold <= safeCount) {
+    revealed += 1;
+    threshold += revealGap(revealed);
+  }
+  return revealed;
 }
 
 export function shelfBottlePlan(ownedBottleKeys: readonly string[]) {
   const count = shelfBottleCount(ownedBottleKeys.length);
   return ownedBottleKeys.slice(0, count).map((key, index) => ({
     key,
-    variant: SHELF_BOTTLE_VARIANTS[index % SHELF_BOTTLE_VARIANTS.length],
+    variant: SHELF_BOTTLE_VARIANTS[stableShelfHash(`${key}:${index}`) % SHELF_BOTTLE_VARIANTS.length]!,
+    layer: (index < 6 ? "lower" : index < 14 ? "upper" : "shadow") as ShelfBottleLayer,
   }));
 }
 

@@ -15,5 +15,11 @@ test("Home header uses the Bourbon Signal brand font and a real alert-inbox acti
   assert.match(tabs, /headerTransparent: true/);
   assert.match(tabs, /headerStyle: \{ backgroundColor: "transparent" \}/);
   assert.doesNotMatch(tabs, /HomeHeaderBackground|home-shelf-header\.jpg|homeHeaderImage/);
+  assert.match(tabs, /accessibilityLabel="Bourbon Signal\."/);
+  assert.match(tabs, /Bourbon Signal<Text style=\{styles\.brandPeriod\}>\.<\/Text>/);
+  assert.match(tabs, /brandPeriod: \{ color: colors\.accent \}/);
+  assert.match(tabs, /function PostTabIcon/);
+  assert.match(tabs, /postIconButton:[^\n]*width: 48[^\n]*height: 48[^\n]*backgroundColor: colors\.accent/);
+  assert.match(tabs, /name="plus" size=\{28\}/);
   assert.match(tabs, /router\.push\(\{ pathname: "\/\(app\)\/\(tabs\)\/radar", params: \{ section: "matches", request: Date\.now\(\)\.toString\(\) \} \}\)/);
 });

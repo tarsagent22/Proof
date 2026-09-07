@@ -70,6 +70,8 @@ test("one full-screen shelf composition continues behind the transparent header 
   assert.match(feed, /source=\{require\("\.\.\/\.\.\/\.\.\/assets\/home-shelf-background\.jpg"\)\}/);
   assert.match(feed, /homeBackdrop: StyleSheet\.absoluteFill/);
   assert.match(feed, /useSafeAreaInsets\(\)/);
-  assert.match(feed, /paddingTop: insets\.top \+ 64/);
+  assert.match(feed, /style=\{\[styles\.feedViewport, \{ marginTop: insets\.top \+ 56 \}\]\}/);
+  assert.match(feed, /header: \{ gap: 8, marginBottom: 10, paddingTop: 8/);
+  assert.doesNotMatch(feed, /paddingTop: insets\.top \+ 64/);
   assert.doesNotMatch(feed, /home-shelf-header\.jpg|homeBackdropShade|homeBackdropFadeMid|homeBackdropFade/);
 });

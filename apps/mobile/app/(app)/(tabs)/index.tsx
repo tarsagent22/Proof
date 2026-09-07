@@ -381,7 +381,7 @@ export default function SignalFeedScreen() {
   );
 
   const header = (
-    <View style={[styles.header, { paddingTop: insets.top + 64 }]}>
+    <View style={styles.header}>
       {tickerSignal ? <View accessibilityLabel="Recent reports" style={styles.tickerShell}>
         <Animated.View style={[styles.tickerAnimated, { opacity: tickerOpacity, transform: [{ translateY: tickerOpacity.interpolate({ inputRange: [0, 1], outputRange: [5, 0] }) }] }]}>
           <Pressable
@@ -517,6 +517,7 @@ export default function SignalFeedScreen() {
       {homeBackdrop}
       <FlatList
       ref={listRef}
+      style={[styles.feedViewport, { marginTop: insets.top + 56 }]}
       contentContainerStyle={styles.list}
       data={visibleSignals}
       keyboardShouldPersistTaps="handled"
@@ -524,7 +525,7 @@ export default function SignalFeedScreen() {
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <SignalCard highlighted={highlightedIds.includes(item.id)} signal={item} onPress={() => router.push({ pathname: "/(app)/signal/[id]", params: { id: item.id } })} />}
 
-      refreshControl={<RefreshControl refreshing={loading && loaded} onRefresh={() => { void load(true); void loadProfile(true); }} progressViewOffset={insets.top + 56} tintColor={colors.accent} colors={[colors.accent]} />}
+      refreshControl={<RefreshControl refreshing={loading && loaded} onRefresh={() => { void load(true); void loadProfile(true); }} tintColor={colors.accent} colors={[colors.accent]} />}
       onEndReached={() => { if (loaded && signals.length && !filters.rarities.length) void load(false); }}
       onEndReachedThreshold={0.5}
       ListHeaderComponent={header}
@@ -552,7 +553,7 @@ export default function SignalFeedScreen() {
         accessibilityLiveRegion="polite"
         accessibilityRole="button"
         onPress={acceptNewSignals}
-        style={({ pressed }) => [styles.newSignalsPill, pressed && styles.newSignalsPillPressed]}
+        style={({ pressed }) => [styles.newSignalsPill, { top: insets.top + 64 }, pressed && styles.newSignalsPillPressed]}
       >
         <MaterialCommunityIcons color="#171009" name="arrow-up" size={17} />
         <Text style={styles.newSignalsText}>New signals · {queuedSignals.length}</Text>
@@ -564,8 +565,9 @@ export default function SignalFeedScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   homeBackdrop: StyleSheet.absoluteFill,
+  feedViewport: { flex: 1 },
   list: { paddingHorizontal: 16, paddingTop: 0, paddingBottom: 64 },
-  header: { gap: 8, marginBottom: 10, paddingBottom: 12 },
+  header: { gap: 8, marginBottom: 10, paddingTop: 8, paddingBottom: 12 },
   tickerShell: { minHeight: 34, marginHorizontal: -16, paddingHorizontal: 16, justifyContent: "center", overflow: "hidden", backgroundColor: "rgba(29, 21, 13, 0.46)" },
   tickerAnimated: { minHeight: 34, justifyContent: "center" },
   tickerSignal: { minHeight: 34, flexDirection: "row", alignItems: "center", gap: 7 },

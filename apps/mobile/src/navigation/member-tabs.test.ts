@@ -31,3 +31,9 @@ test("uses a bottle, not wine glassware, for My Shelf", () => {
   assert.match(cellar?.icon || "", /bottle/i);
   assert.doesNotMatch(cellar?.icon || "", /wine|glass/i);
 });
+
+test("uses a plain plus glyph for the custom primary Post button", () => {
+  const post = MEMBER_TABS.find((tab) => tab.key === "post");
+  assert.equal(post?.label, "Post");
+  assert.equal(post?.icon, "plus");
+});

@@ -28,23 +28,28 @@ test("defines seven visibly distinct bottle silhouettes", () => {
   assert.equal(new Set(signatures).size, 7);
 });
 
-test("grows the illustrated shelf at nonlinear collection milestones", () => {
-  assert.equal(shelfBottleCount(0), 0);
-  assert.equal(shelfBottleCount(1), 1);
-  assert.equal(shelfBottleCount(3), 2);
-  assert.equal(shelfBottleCount(10), 4);
-  assert.equal(shelfBottleCount(22), 7);
-  assert.equal(shelfBottleCount(67), 12);
-  assert.equal(shelfBottleCount(400), 12);
+test("grows at irregular deterministic milestones without a finite cap", () => {
+  const counts = Array.from({ length: 1_001 }, (_, owned) => shelfBottleCount(owned));
+  assert.equal(counts[0], 0);
+  assert.equal(counts[1], 1);
+  assert.ok(counts.every((count, index) => index === 0 || count === counts[index - 1] || count === counts[index - 1]! + 1));
+  assert.ok(counts.some((count, index) => index > 1 && count === counts[index - 1]), "some additions keep the next reveal mysterious");
+  assert.ok(counts.some((count, index) => index > 1 && count === counts[index - 1]! + 1), "some additions reveal a surprise bottle");
+  assert.ok(shelfBottleCount(500) > 12);
+  assert.ok(shelfBottleCount(1_000) > shelfBottleCount(500));
 });
 
-test("uses every silhouette deterministically as the shelf fills", () => {
-  const keys = Array.from({ length: 67 }, (_, index) => `bottle-${index + 1}`);
+test("uses every silhouette deterministically and adds shadow depth as the shelf fills", () => {
+  const keys = Array.from({ length: 500 }, (_, index) => `bottle-${index + 1}`);
   const first = shelfBottlePlan(keys);
   const second = shelfBottlePlan(keys);
   assert.deepEqual(first, second);
-  assert.equal(first.length, 12);
+  assert.equal(first.length, shelfBottleCount(keys.length));
+  assert.ok(first.length > 12);
   assert.equal(new Set(first.map((entry) => entry.variant.name)).size, 7);
+  assert.ok(first.some((entry) => entry.layer === "shadow"));
+  assert.ok(first.some((entry) => entry.layer === "lower"));
+  assert.ok(first.some((entry) => entry.layer === "upper"));
 });
 
 test("reveals collection entries in twelve-item pages", () => {
